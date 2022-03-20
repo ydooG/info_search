@@ -3,6 +3,8 @@ import time
 import requests
 from bs4 import BeautifulSoup
 
+from path import ROOT
+
 
 def generate_index_file():
     url = 'https://obrazovaka.ru/books'
@@ -12,7 +14,7 @@ def generate_index_file():
         soup = BeautifulSoup(resp.text, features='html.parser')
         a_tags = soup.select('.short__item .item__bottom a')[:100]
         links = list(map(lambda a: a.get('href'), a_tags))
-        with open('static/index.txt', mode='w') as file:
+        with open(ROOT + '/task1/static/index.txt', mode='w') as file:
             for i, link in enumerate(links):
                 file.write(f'{i+1} - {link}\n')
     else:
@@ -30,7 +32,7 @@ def download_page(url, path):
 def main():
     links = generate_index_file()
     for i, link in enumerate(links):
-        path = f'static/pages/{i+1}.html'
+        path = ROOT + f'/task1/static/pages/{i+1}.html'
         try:
             download_page(link, path)
         except ConnectionError:

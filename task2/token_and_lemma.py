@@ -2,8 +2,10 @@ import nltk
 from bs4 import BeautifulSoup
 from pymorphy2 import MorphAnalyzer
 
+from path import ROOT
 
-def get_text_from_file(path):
+
+def get_tokens_from_file(path):
     with open(path, mode='r') as file:
         soup = BeautifulSoup(file.read(), features='html.parser')
         texts = ' '.join(soup.find('article').stripped_strings)
@@ -25,7 +27,7 @@ def clean_tokens(tokens):
 
 
 def write_tokens_to_file(tokens):
-    with open('static/tokens.txt', mode='w') as file:
+    with open(ROOT + '/task2/static/tokens.txt', mode='w') as file:
         for token in tokens:
             file.write(f'{token}\n')
 
@@ -44,16 +46,16 @@ def get_lemmas(tokens):
 
 
 def write_lemmas_to_file(lemmas):
-    with open('static/lemmas.txt', mode='w') as file:
+    with open(ROOT + '/task2/static/lemmas.txt', mode='w') as file:
         for lemma, tokens in lemmas.items():
             file.write(f'{lemma}: {" ".join(tokens)}\n')
 
 
 def main():
-    paths = [f'../task1/static/pages/{i}.html' for i in range(1, 101)]
+    paths = [f'{ROOT}/task1/static/pages/{i}.html' for i in range(1, 101)]
     raw_tokens = list()
     for path in paths:
-        raw_tokens.extend(get_text_from_file(path))
+        raw_tokens.extend(get_tokens_from_file(path))
     tokens = clean_tokens(raw_tokens)
     write_tokens_to_file(tokens)
     lemmas = get_lemmas(tokens)
